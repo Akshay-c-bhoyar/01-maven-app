@@ -31,10 +31,10 @@ pipeline {
         post{
              always{
                  mail to:"bhoyar.akshay160@gmail.com",
-                 subject:"Test Email"
+                 subject:"Test Email",
                  body:"Test"
-	     }
- 	}		 
+	         }
+ 	    }		 
 	
     }
 }
