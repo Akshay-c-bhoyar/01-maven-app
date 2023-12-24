@@ -1,39 +1,40 @@
-pipeline{
-    agentany
-    environment{
-        path= "$PATH:/opt/apache-maven-3.8.8/bin"
-    }
+pipeline {
+    agent any
+    environment {
+         path="$PATH:/opt/apache-maven-3.6.3/bin"
+    }    
     stages{
         stage('Getcode'){
             steps{
-                git'https://github.com/Akshay-c-bhoyar/01-maven-app.git'
- 	    }
-  	}        
-        stage('Build'){
+                git branch: 'main', url: 'https://github.com/Akshay-c-bhoyar/01-maven-app.git'    
+            }   
+        }
+        stage('build'){
             steps{
                 sh'mvn clean package'
             }
         }
-        stage('SonarQube analysis'){
+        stage('sonarqube analysis'){
             steps{
-             withSonarQubeEnv('sonar-server-4.0.0'){
-                          sh "mvn sonar:sonar"
-            }
-	    }
-	}
+                withsonarcube Env('sonar-server-7.8'){
+                sh " sonar:sonar-7.8"
+                }
+            } 
+        }
         stage('Deploy'){
-	    steps{
-		ssh-agent('Tomcat-server-agent'){
-		sh'scp -o StrictHostKetchecking=no target/01-maven-app.war ec2_user@public ip of tomcat-server:/home/ec2-user/apache-tomcat-9.0.63/webapps'
-		}
- 	    }
-	}
-	post{
-            always{
-          	mail to:"bhoyar.akshay160@gmail.com"
-		subject:"Test mail"
- 		body:"Test"
-	    }
-	}
-     }		
-}    
+            steps{
+		ssh -agent('Tomcat-server-agent'){                                                     
+		     sh'scp -o strictHostkeychecking=no target/01-maven-app.war ec2-user@34.219.239.144:/home/ec2-user/apachetomcat-9.0.63/webapp'
+                }              
+            }
+        }
+        post{
+             always{
+                 mail to:"bhoyar.akshay160@gmail.com",
+                 subject:"Test Email"
+                 body:"Test"
+	     }
+ 	}		 
+	
+    }
+}
