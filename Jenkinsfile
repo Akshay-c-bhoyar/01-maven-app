@@ -14,13 +14,13 @@ pipeline {
                 sh'mvn clean package'
             }
         }
-        stage('sonarqube analysis'){
-            steps{
-                withsonarcube Env('sonar-server-7.8'){
-                sh "sonar:sonar-7.8"
-                }
-            } 
-        }
+        // stage('sonarqube analysis'){
+        //     steps{
+        //         withsonarcube Env('sonar-server-7.8'){
+        //         sh "sonar:sonar-7.8"
+        //         }
+        //     } 
+        // }
         stage('Deploy'){
             steps{
 		sshagent(['Tomcat-server-agent']){                                                     
